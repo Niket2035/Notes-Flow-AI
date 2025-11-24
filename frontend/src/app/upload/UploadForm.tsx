@@ -15,12 +15,16 @@ export default function UploadForm() {
     setIsUploading(true);
 
     const form = new FormData();
-    form.append("audio", file);
+    form.append("video", file);
 
-    // const res = await fetch("http://localhost:5000/api/upload", {
-    //   method: "POST",
-    //   body: form,
-    // });
+    const res = await fetch("http://localhost:5000/api/upload", {
+      method: "POST",
+      body: form,
+    });
+
+    if (res.ok) {
+      console.log("File uploaded successfully");
+    }
 
     // const data = await res.json();
     // setSummary(data.summary || "Summary is being generated...");
@@ -28,9 +32,7 @@ export default function UploadForm() {
     // Simulate delay for demo
     setTimeout(() => {
       setIsUploading(false);
-      setSummary(
-        "This is a simulated summary."
-      );
+      setSummary("This is a simulated summary.");
     }, 2000);
   };
 

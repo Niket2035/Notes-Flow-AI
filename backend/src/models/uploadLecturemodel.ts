@@ -2,10 +2,12 @@ import { model, Schema } from "mongoose";
 
 const UploadLectureSchema = new Schema(
   {
-    fileUrl: String,
-    transcript: String,
-    summary: String,
-    keyPhrases: [String],
+    videoUrl: { type: String },
+    transcript: { type: String },
+    summary: { type: String },
+    bulletPoints: [String],
+    importantPoints: [String],
+    chapters: { type: Array },
   },
   { timestamps: true }
 );

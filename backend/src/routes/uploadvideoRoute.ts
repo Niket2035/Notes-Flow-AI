@@ -1,0 +1,9 @@
+import { Router } from "express";
+import uploadVideoController from "../controllers/uploadvideocontroller";
+import { upload } from "../middlewares/uploadvideo";
+
+const router = Router();
+
+router.post("/api/upload", upload.single("video"), uploadVideoController.uploadVideo);
+
+export default router;
