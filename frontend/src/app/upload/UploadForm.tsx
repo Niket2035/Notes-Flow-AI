@@ -26,14 +26,16 @@ export default function UploadForm() {
       console.log("File uploaded successfully");
     }
 
-    // const data = await res.json();
-    // setSummary(data.summary || "Summary is being generated...");
+    const data = await res.json();
+    setSummary(data.summary || "Summary is being generated...");
+
+    console.log("Flow started:", data);
 
     // Simulate delay for demo
-    setTimeout(() => {
-      setIsUploading(false);
-      setSummary("This is a simulated summary.");
-    }, 2000);
+    // setTimeout(() => {
+    //   setIsUploading(false);
+    //   setSummary("This is a simulated summary.");
+    // }, 2000);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
