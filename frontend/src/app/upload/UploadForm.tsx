@@ -18,55 +18,25 @@ export default function UploadForm() {
     form.append("video", file);
 
     const apiUrl = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/$/, '');
-    try {
-      const res = await fetch(`${apiUrl}/api/upload`, {
-        method: "POST",
-        body: form,
-      });
+    const res = await fetch(`${apiUrl}/api/upload`, {
+      method: "POST",
+      body: form,
+    });
 
-      if (!res.ok) {
-        throw new Error("Upload failed");
-      }
-
-      const data = await res.json();
-      console.log("Flow started:", data);
-
-      const lectureId = data.lectureId;
-      if (!lectureId) {
-        throw new Error("No lecture ID received");
-      }
-
-      // Start polling
-      const pollInterval = setInterval(async () => {
-        try {
-          const pollRes = await fetch(`${apiUrl}/api/lecture/${lectureId}`);
-          if (pollRes.ok) {
-            const pollData = await pollRes.json();
-            if (pollData.summary) {
-              clearInterval(pollInterval);
-              setSummary(pollData.summary);
-              setIsUploading(false);
-            }
-          }
-        } catch (error) {
-          console.error("Polling error:", error);
-        }
-      }, 2000);
-
-      // Stop polling after 2 minutes
-      setTimeout(() => {
-        clearInterval(pollInterval);
-        if (isUploading) {
-          setIsUploading(false);
-          // Optional: set an error message or keep waiting
-        }
-      }, 120000);
-
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      setIsUploading(false);
-      alert("Failed to upload file");
+    if (res.ok) {
+      console.log("File uploaded successfully");
     }
+
+    const data = await res.json();
+    setSummary(data.summary || "Summary is being generated...");
+
+    console.log("Flow started:", data);
+
+    // Simulate delay for demo
+    // setTimeout(() => {
+    //   setIsUploading(false);
+    //   setSummary("This is a simulated summary.");
+    // }, 2000);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
