@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import connectDB from './config/database';
 
 dotenv.config();
-connectDB();
 
 const app = express();
 app.use(cors({
@@ -12,6 +11,17 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
+
+// Middleware to ensure DB is connected before handling requests
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (error) {
+        console.error("Database connection failed in middleware:", error);
+        res.status(500).json({ error: "Database connection failed" });
+    }
+});
 
 
 
