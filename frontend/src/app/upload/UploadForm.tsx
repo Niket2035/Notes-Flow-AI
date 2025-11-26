@@ -17,7 +17,8 @@ export default function UploadForm() {
     const form = new FormData();
     form.append("video", file);
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/upload`, {
+    const apiUrl = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/$/, '');
+    const res = await fetch(`${apiUrl}/api/upload`, {
       method: "POST",
       body: form,
     });
@@ -72,8 +73,8 @@ export default function UploadForm() {
       >
         <div
           className={`p-4 rounded-full mb-4 transition-all duration-300 ${file
-              ? "bg-indigo-500/20 text-indigo-400"
-              : "bg-gray-800 text-gray-400 group-hover:bg-indigo-500/20 group-hover:text-indigo-400"
+            ? "bg-indigo-500/20 text-indigo-400"
+            : "bg-gray-800 text-gray-400 group-hover:bg-indigo-500/20 group-hover:text-indigo-400"
             }`}
         >
           <UploadCloud className="w-10 h-10" />
