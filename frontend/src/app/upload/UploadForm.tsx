@@ -118,7 +118,7 @@ export default function UploadForm() {
         />
       </label>
 
-      <div className="flex justify-center mt-8">
+      <div className="flex justify-center mt-8 mb-8">
         <button
           onClick={handleUpload}
           disabled={isUploading || !file}
