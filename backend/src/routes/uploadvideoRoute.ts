@@ -5,5 +5,6 @@ import { upload } from "../middlewares/uploadvideo";
 const router = Router();
 
 router.post("/api/upload", upload.single("video"), uploadVideoController.uploadVideo);
+router.get("/api/lecture/:id", uploadVideoController.getLecture);
 
 export default router;

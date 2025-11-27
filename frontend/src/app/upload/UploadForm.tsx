@@ -28,15 +28,34 @@ export default function UploadForm() {
     }
 
     const data = await res.json();
-    setSummary(data.summary || "Summary is being generated...");
+
+    if (data.lectureId) {
+      setSummary("Generating summary... This may take a few moments.");
+      pollForSummary(data.lectureId);
+    } else {
+      setSummary(data.summary || "Summary is being generated...");
+    }
 
     console.log("Flow started:", data);
+  };
 
-    // Simulate delay for demo
-    // setTimeout(() => {
-    //   setIsUploading(false);
-    //   setSummary("This is a simulated summary.");
-    // }, 2000);
+  const pollForSummary = async (lectureId: string) => {
+    const apiUrl = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/$/, '');
+    const intervalId = setInterval(async () => {
+      try {
+        const res = await fetch(`${apiUrl}/api/lecture/${lectureId}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.summary) {
+            setSummary(data.summary);
+            setIsUploading(false);
+            clearInterval(intervalId);
+          }
+        }
+      } catch (error) {
+        console.error("Polling error:", error);
+      }
+    }, 3000); 
   };
 
   const handleDragOver = (e: React.DragEvent) => {

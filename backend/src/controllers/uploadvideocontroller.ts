@@ -11,8 +11,7 @@ const uploadVideo = async (req: Request, res: Response) => {
     const videoUrl = (req.file as any).path;
 
     if (!process.env.ACTIVEPIECE_WEBHOOK) {
-      console.error("ACTIVEPIECE_WEBHOOK environment variable is missing");
-      return res.status(500).json({ message: "Server configuration error: Webhook URL missing" });
+      return res.status(500).json({ message: "Webhook URL missing" });
     }
 
     const lecture = await uploadLecturemodel.create({
@@ -26,13 +25,6 @@ const uploadVideo = async (req: Request, res: Response) => {
       });
     } catch (webhookError: any) {
       console.error("ActivePieces Webhook Failed:", webhookError.response?.data || webhookError.message);
-      // We don't fail the request if webhook fails, but we log it. 
-      // Alternatively, you might want to return a warning or fail.
-      // For now, let's keep the success response but maybe include a warning?
-      // Or if the webhook is critical, we should fail. 
-      // The user said "upload failed error", so let's assume it's critical.
-      // But usually, we want to save the video even if webhook fails.
-      // Let's return success but log the error.
     }
 
     res.json({
@@ -46,4 +38,20 @@ const uploadVideo = async (req: Request, res: Response) => {
   }
 };
 
-export default { uploadVideo };
+const getLecture = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const lecture = await uploadLecturemodel.findById(id);
+
+    if (!lecture) {
+      return res.status(404).json({ message: "Lecture not found" });
+    }
+
+    res.json(lecture);
+  } catch (error: any) {
+    console.error("Get Lecture Error:", error);
+    res.status(500).json({ error: "Failed to fetch lecture", details: error.message });
+  }
+};
+
+export default { uploadVideo, getLecture };
