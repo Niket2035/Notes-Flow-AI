@@ -85,118 +85,123 @@ export default function SummaryBox({
   return (
     <div className="relative w-full space-y-12 p-8 md:p-10 rounded-3xl bg-white border border-gray-100 shadow-2xl text-gray-800 overflow-hidden">
       <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50 rounded-full blur-3xl -z-10 opacity-60 transform translate-x-1/2 -translate-y-1/2"></div>
+      <div className="space-y-12 overflow-y-auto max-h-[80vh] pr-4 custom-scroll mt-10">
+        <div className="absolute top-6 right-6 flex gap-3">
+          <button
+            onClick={handleDownload}
+            className="group p-2.5 bg-gray-50 hover:bg-indigo-50 rounded-xl text-gray-500 hover:text-indigo-600 transition-all duration-300 border border-gray-200 hover:border-indigo-200 shadow-sm hover:shadow-md"
+            title="Download Notes"
+          >
+            <Download
+              size={20}
+              className="group-hover:scale-110 transition-transform"
+            />
+          </button>
+          <button
+            onClick={handleOpenNewTab}
+            className="group p-2.5 bg-gray-50 hover:bg-indigo-50 rounded-xl text-gray-500 hover:text-indigo-600 transition-all duration-300 border border-gray-200 hover:border-indigo-200 shadow-sm hover:shadow-md"
+            title="Open in New Tab"
+          >
+            <ExternalLink
+              size={20}
+              className="group-hover:scale-110 transition-transform"
+            />
+          </button>
+        </div>
 
-      <div className="absolute top-6 right-6 flex gap-3">
-        <button
-          onClick={handleDownload}
-          className="group p-2.5 bg-gray-50 hover:bg-indigo-50 rounded-xl text-gray-500 hover:text-indigo-600 transition-all duration-300 border border-gray-200 hover:border-indigo-200 shadow-sm hover:shadow-md"
-          title="Download Notes"
-        >
-          <Download
-            size={20}
-            className="group-hover:scale-110 transition-transform"
-          />
-        </button>
-        <button
-          onClick={handleOpenNewTab}
-          className="group p-2.5 bg-gray-50 hover:bg-indigo-50 rounded-xl text-gray-500 hover:text-indigo-600 transition-all duration-300 border border-gray-200 hover:border-indigo-200 shadow-sm hover:shadow-md"
-          title="Open in New Tab"
-        >
-          <ExternalLink
-            size={20}
-            className="group-hover:scale-110 transition-transform"
-          />
-        </button>
-      </div>
-
-      {chapters.length > 0 && (
-        <section>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-emerald-100 rounded-lg text-emerald-600">
-              <BookOpen size={24} />
-            </div>
-            <h3 className="text-2xl font-bold text-gray-900">Chapters</h3>
-          </div>
-
-          <div className="grid gap-6">
-            {chapters.map((ch, idx) => (
-              <div
-                key={idx}
-                className="group p-6 rounded-2xl border border-gray-100 bg-gray-50 hover:bg-white hover:border-emerald-100 hover:shadow-lg transition-all duration-300"
-              >
-                <h4 className="text-xl font-bold text-gray-800 mb-3 group-hover:text-emerald-700 transition-colors">
-                  {ch.title}
-                </h4>
-
-                <p className="text-gray-600 leading-relaxed whitespace-pre-line">
-                  {ch.summary}
-                </p>
+        {chapters.length > 0 && (
+          <section>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-emerald-100 rounded-lg text-emerald-600">
+                <BookOpen size={24} />
               </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {importantPoints.length > 0 && (
-        <section>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-purple-100 rounded-lg text-purple-600">
-              <Star size={24} />
+              <h3 className="text-2xl font-bold text-gray-900">Chapters</h3>
             </div>
-            <h3 className="text-2xl font-bold text-gray-900">
-              Important Points
-            </h3>
-          </div>
 
-          <ul className="grid gap-3">
-            {importantPoints.map((point, idx) => (
-              <li
-                key={idx}
-                className="flex items-start gap-3 p-4 rounded-xl bg-purple-50/50 border border-purple-100/50 text-gray-700"
-              >
-                <span className="mt-1.5 w-2 h-2 rounded-full bg-purple-400 flex-shrink-0" />
-                <span className="leading-relaxed">{point}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+            <div className="grid gap-6">
+              {chapters.map((ch, idx) => (
+                <div
+                  key={idx}
+                  className="group p-6 rounded-2xl border border-gray-100 bg-gray-50 hover:bg-white hover:border-emerald-100 hover:shadow-lg transition-all duration-300"
+                >
+                  <h4 className="text-xl font-bold text-gray-800 mb-3 group-hover:text-emerald-700 transition-colors">
+                    {ch.title}
+                  </h4>
 
-      {bulletPoints.length > 0 && (
-        <section>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
-              <List size={24} />
+                  <p className="text-gray-600 leading-relaxed whitespace-pre-line">
+                    {ch.summary}
+                  </p>
+                </div>
+              ))}
             </div>
-            <h3 className="text-2xl font-bold text-gray-900">Key Takeaways</h3>
+          </section>
+        )}
+
+        {importantPoints.length > 0 && (
+          <section>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-purple-100 rounded-lg text-purple-600">
+                <Star size={24} />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900">
+                Important Points
+              </h3>
+            </div>
+
+            <ul className="grid gap-3">
+              {importantPoints.map((point, idx) => (
+                <li
+                  key={idx}
+                  className="flex items-start gap-3 p-4 rounded-xl bg-purple-50/50 border border-purple-100/50 text-gray-700"
+                >
+                  <span className="mt-1.5 w-2 h-2 rounded-full bg-purple-400 flex-shrink-0" />
+                  <span className="leading-relaxed">{point}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {bulletPoints.length > 0 && (
+          <section>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
+                <List size={24} />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900">
+                Key Takeaways
+              </h3>
+            </div>
+
+            <ul className="grid gap-3">
+              {bulletPoints.map((point, idx) => (
+                <li
+                  key={idx}
+                  className="flex items-start gap-3 p-4 rounded-xl bg-blue-50/50 border border-blue-100/50 text-gray-700"
+                >
+                  <span className="mt-1.5 w-2 h-2 rounded-full bg-blue-400 flex-shrink-0" />
+                  <span className="leading-relaxed">{point}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        <section className="pt-6 border-t border-gray-100">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 bg-indigo-100 rounded-lg text-indigo-600">
+              <FileText size={24} />
+            </div>
+            <h2 className="text-3xl font-bold text-gray-900">
+              Lecture Summary
+            </h2>
           </div>
 
-          <ul className="grid gap-3">
-            {bulletPoints.map((point, idx) => (
-              <li
-                key={idx}
-                className="flex items-start gap-3 p-4 rounded-xl bg-blue-50/50 border border-blue-100/50 text-gray-700"
-              >
-                <span className="mt-1.5 w-2 h-2 rounded-full bg-blue-400 flex-shrink-0" />
-                <span className="leading-relaxed">{point}</span>
-              </li>
-            ))}
-          </ul>
+          <div className="prose prose-lg max-w-none text-gray-600 leading-loose whitespace-pre-line">
+            {summary || "Generating Notes... This may take a few minutes."}
+          </div>
         </section>
-      )}
-
-      <section className="pt-6 border-t border-gray-100">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="p-2 bg-indigo-100 rounded-lg text-indigo-600">
-            <FileText size={24} />
-          </div>
-          <h2 className="text-3xl font-bold text-gray-900">Lecture Summary</h2>
-        </div>
-
-        <div className="prose prose-lg max-w-none text-gray-600 leading-loose whitespace-pre-line">
-          {summary || "Summary not available yet."}
-        </div>
-      </section>
+      </div>
     </div>
   );
 }
