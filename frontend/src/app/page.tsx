@@ -1,10 +1,11 @@
 
-import UploadPage from "./upload/page";
+import HomePage from "./component/home/home";
+
 
 export default function Home() {
   return (
     <div className="min-h-screen w-full">
-      <UploadPage />
+      <HomePage />
     </div>
 
   );

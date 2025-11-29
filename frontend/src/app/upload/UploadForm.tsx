@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import SummaryBox from "@/app/component/summeryBox";
+import SummaryBox from "@/app/component/box/summeryBox";
 import { UploadCloud, Loader2 } from "lucide-react";
 
 export default function UploadForm() {

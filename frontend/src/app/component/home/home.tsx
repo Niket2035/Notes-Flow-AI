@@ -1,7 +1,7 @@
-import UploadForm from "./UploadForm";
 
+import UploadForm from "@/app/upload/UploadForm";
 
-export default function UploadPage() {
+export default function HomePage() {
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-zinc-900 to-slate-900 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
