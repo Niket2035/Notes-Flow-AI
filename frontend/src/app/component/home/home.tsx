@@ -1,5 +1,6 @@
 
 import UploadForm from "@/app/upload/UploadForm";
+import UploadPage from "@/app/upload/page";
 
 export default function HomePage() {
   return (
@@ -20,7 +21,7 @@ export default function HomePage() {
           </p>
         </div>
 
-        <UploadForm />
+        <UploadPage />
       </div>
     </div>
   );

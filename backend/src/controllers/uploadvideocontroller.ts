@@ -4,11 +4,15 @@ import axios from "axios";
 
 const uploadVideo = async (req: Request, res: Response) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ message: "No file uploaded" });
-    }
+    let videoUrl: string;
 
-    const videoUrl = (req.file as any).path;
+    if (req.file) {
+      videoUrl = (req.file as any).path;
+    } else if (req.body.videoUrl) {
+      videoUrl = req.body.videoUrl;
+    } else {
+      return res.status(400).json({ message: "No file or link uploaded" });
+    }
 
     if (!process.env.ACTIVEPIECE_WEBHOOK) {
       return res.status(500).json({ message: "Webhook URL missing" });
