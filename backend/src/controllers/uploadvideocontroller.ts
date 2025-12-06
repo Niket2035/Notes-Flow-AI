@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import uploadLecturemodel from "../models/uploadLecturemodel";
 import axios from "axios";
+import extractYoutubeAudio from "../middlewares/extractYoutubeAudio";
+const isYouTubeUrl = (url: string) =>
+  url.includes("youtube.com/watch") || url.includes("youtu.be/");
 
 const uploadVideo = async (req: Request, res: Response) => {
   try {
@@ -9,7 +12,14 @@ const uploadVideo = async (req: Request, res: Response) => {
     if (req.file) {
       videoUrl = (req.file as any).path;
     } else if (req.body.videoUrl) {
-      videoUrl = req.body.videoUrl;
+      
+      const inputUrl = req.body.videoUrl;
+
+      if (!isYouTubeUrl(inputUrl)) {
+        return res.status(400).json({ message: "Invalid YouTube URL" });
+      }
+
+      videoUrl = await extractYoutubeAudio(inputUrl);
     } else {
       return res.status(400).json({ message: "No file or link uploaded" });
     }
@@ -28,7 +38,10 @@ const uploadVideo = async (req: Request, res: Response) => {
         videoUrl,
       });
     } catch (webhookError: any) {
-      console.error("ActivePieces Webhook Failed:", webhookError.response?.data || webhookError.message);
+      console.error(
+        "ActivePieces Webhook Failed:",
+        webhookError.response?.data || webhookError.message
+      );
     }
 
     res.json({
@@ -54,7 +67,9 @@ const getLecture = async (req: Request, res: Response) => {
     res.json(lecture);
   } catch (error: any) {
     console.error("Get Lecture Error:", error);
-    res.status(500).json({ error: "Failed to fetch lecture", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Failed to fetch lecture", details: error.message });
   }
 };
 
