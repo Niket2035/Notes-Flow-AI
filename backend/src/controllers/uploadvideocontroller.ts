@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
+import ytdl from "ytdl-core";
 import uploadLecturemodel from "../models/uploadLecturemodel";
 import axios from "axios";
 import extractYoutubeAudio from "../middlewares/extractYoutubeAudio";
-const isYouTubeUrl = (url: string) =>
-  url.includes("youtube.com/watch") || url.includes("youtu.be/");
+
 
 const uploadVideo = async (req: Request, res: Response) => {
   try {
@@ -12,10 +12,9 @@ const uploadVideo = async (req: Request, res: Response) => {
     if (req.file) {
       videoUrl = (req.file as any).path;
     } else if (req.body.videoUrl) {
-      
-      const inputUrl = req.body.videoUrl;
+      const inputUrl = req.body.videoUrl.trim();
 
-      if (!isYouTubeUrl(inputUrl)) {
+      if (!ytdl.validateURL(inputUrl)) {
         return res.status(400).json({ message: "Invalid YouTube URL" });
       }
 

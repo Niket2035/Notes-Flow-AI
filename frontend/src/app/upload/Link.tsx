@@ -21,7 +21,7 @@ export default function LinkUpload() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ videoUrl: link }),
+                body: JSON.stringify({ videoUrl: link.trim() }),
             });
 
             if (res.ok) {
