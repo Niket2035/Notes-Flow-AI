@@ -16,7 +16,7 @@ export default function LinkUpload() {
         const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
 
         try {
-            const res = await fetch(`${apiUrl}/api/upload`, {
+            const res = await fetch(`${apiUrl}/api/uploadlink`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

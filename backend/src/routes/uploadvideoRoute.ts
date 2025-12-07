@@ -6,5 +6,6 @@ const router = Router();
 
 router.post("/api/upload", upload.single("video"), uploadVideoController.uploadVideo);
 router.get("/api/lecture/:id", uploadVideoController.getLecture);
+router.post("/api/uploadlink", uploadVideoController.uploadLink);
 
 export default router;
