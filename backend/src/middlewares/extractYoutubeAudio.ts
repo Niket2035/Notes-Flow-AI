@@ -1,4 +1,4 @@
-import ytdl from "ytdl-core";
+import ytdl from "@distube/ytdl-core";
 import cloudinary from "../config/cloudinary";
 
 const extractYoutubeAudio = async (youtubeUrl: string): Promise<string> => {
@@ -11,7 +11,7 @@ const extractYoutubeAudio = async (youtubeUrl: string): Promise<string> => {
   return new Promise<string>((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
-        resource_type: "video", 
+        resource_type: "video",
         folder: "youtube-audio",
         format: "mp3",
       },
@@ -25,6 +25,11 @@ const extractYoutubeAudio = async (youtubeUrl: string): Promise<string> => {
         resolve(result.secure_url);
       }
     );
+
+    // CRITICAL: Handle errors on the source stream to prevent uncaught exceptions crashing the process
+    audioStream.on('error', (err: any) => {
+      reject(new Error(`YTDL Error: ${err.message}`));
+    });
 
     audioStream.pipe(uploadStream);
   });

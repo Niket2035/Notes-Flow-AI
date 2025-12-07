@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import ytdl from "ytdl-core";
+import ytdl from "@distube/ytdl-core";
 import uploadLecturemodel from "../models/uploadLecturemodel";
 import axios from "axios";
 import extractYoutubeAudio from "../middlewares/extractYoutubeAudio";
@@ -65,40 +65,40 @@ const getLecture = async (req: Request, res: Response) => {
 
 const uploadLink = async (req: Request, res: Response) => {
   try {
-  let videoUrl: string;
+    let videoUrl: string;
 
-  if (req.body.videoUrl) {
-    const inputUrl = req.body.videoUrl.trim();
-    if (!ytdl.validateURL(inputUrl)) {
-      return res.status(400).json({ message: "Invalid YouTube URL" });
+    if (req.body.videoUrl) {
+      const inputUrl = req.body.videoUrl.trim();
+      if (!ytdl.validateURL(inputUrl)) {
+        return res.status(400).json({ message: "Invalid YouTube URL" });
+      }
+      videoUrl = await extractYoutubeAudio(inputUrl);
+    } else {
+      return res.status(400).json({ message: "No link uploaded" });
     }
-    videoUrl = await extractYoutubeAudio(inputUrl);
-  } else {
-    return res.status(400).json({ message: "No link uploaded" });
-  }
-  const lecture = await uploadLecturemodel.create({
-    videoUrl,
-  });
-  try {
-    await axios.post(process.env.ACTIVEPIECE_WEBHOOK!, {
-      lectureId: lecture._id,
+    const lecture = await uploadLecturemodel.create({
       videoUrl,
     });
-  } catch (webhookError: any) {
-    console.error(
-      "ActivePieces Webhook Failed:",
-      webhookError.response?.data || webhookError.message
-    );
+    try {
+      await axios.post(process.env.ACTIVEPIECE_WEBHOOK!, {
+        lectureId: lecture._id,
+        videoUrl,
+      });
+    } catch (webhookError: any) {
+      console.error(
+        "ActivePieces Webhook Failed:",
+        webhookError.response?.data || webhookError.message
+      );
+    }
+    res.json({
+      message: "Video link uploaded and flow started",
+      videoUrl,
+      lectureId: lecture._id,
+    });
+  } catch (error: any) {
+    console.error("Upload Link Controller Error:", error);
+    res.status(500).json({ error: "Upload failed", details: error.message });
   }
-  res.json({
-    message: "Video link uploaded and flow started",
-    videoUrl,
-    lectureId: lecture._id,
-  });
-} catch (error: any) {
-  console.error("Upload Link Controller Error:", error);
-  res.status(500).json({ error: "Upload failed", details: error.message });
-}
 };
 
-export default { uploadVideo, getLecture , uploadLink};
+export default { uploadVideo, getLecture, uploadLink };
