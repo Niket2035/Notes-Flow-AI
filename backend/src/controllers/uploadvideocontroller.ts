@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import ytdl from "@distube/ytdl-core";
 import uploadLecturemodel from "../models/uploadLecturemodel";
 import axios from "axios";
-import extractYoutubeAudio from "../middlewares/extractYoutubeAudio";
 
 const uploadVideo = async (req: Request, res: Response) => {
   try {
@@ -25,7 +24,8 @@ const uploadVideo = async (req: Request, res: Response) => {
     try {
       await axios.post(process.env.ACTIVEPIECE_WEBHOOK, {
         lectureId: lecture._id,
-        videoUrl,
+        token: "upload",
+        videoUrl: videoUrl,
       });
     } catch (webhookError: any) {
       console.error(
@@ -64,41 +64,26 @@ const getLecture = async (req: Request, res: Response) => {
 };
 
 const uploadLink = async (req: Request, res: Response) => {
-  try {
-    let videoUrl: string;
+  const { videoUrl } = req.body;
 
-    if (req.body.videoUrl) {
-      const inputUrl = req.body.videoUrl.trim();
-      if (!ytdl.validateURL(inputUrl)) {
-        return res.status(400).json({ message: "Invalid YouTube URL" });
-      }
-      videoUrl = await extractYoutubeAudio(inputUrl);
-    } else {
-      return res.status(400).json({ message: "No link uploaded" });
-    }
-    const lecture = await uploadLecturemodel.create({
-      videoUrl,
-    });
-    try {
-      await axios.post(process.env.ACTIVEPIECE_WEBHOOK!, {
-        lectureId: lecture._id,
-        videoUrl,
-      });
-    } catch (webhookError: any) {
-      console.error(
-        "ActivePieces Webhook Failed:",
-        webhookError.response?.data || webhookError.message
-      );
-    }
-    res.json({
-      message: "Video link uploaded and flow started",
-      videoUrl,
-      lectureId: lecture._id,
-    });
-  } catch (error: any) {
-    console.error("Upload Link Controller Error:", error);
-    res.status(500).json({ error: "Upload failed", details: error.message });
+  if (!videoUrl) {
+    return res.status(400).json({ message: "No link provided" });
   }
+
+  const lecture = await uploadLecturemodel.create({
+    videoUrl,
+  });
+
+  await axios.post(process.env.ACTIVEPIECE_WEBHOOK!, {
+    lectureId: lecture._id,
+    token: "youtube",
+    youtubeUrl: videoUrl,
+  });
+
+  res.json({
+    message: "YouTube link submitted",
+    lectureId: lecture._id,
+  });
 };
 
 export default { uploadVideo, getLecture, uploadLink };
