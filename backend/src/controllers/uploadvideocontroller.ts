@@ -77,7 +77,7 @@ const uploadLink = async (req: Request, res: Response) => {
   await axios.post(process.env.ACTIVEPIECE_WEBHOOK!, {
     lectureId: lecture._id,
     token: "youtube",
-    youtubeUrl: videoUrl,
+    videoUrl: videoUrl,
   });
 
   res.json({
